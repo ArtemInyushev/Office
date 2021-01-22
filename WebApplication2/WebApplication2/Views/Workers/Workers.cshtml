@@ -1,0 +1,67 @@
+﻿@using WebApplication2.Models
+@model List<Worker>
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Workers</title>
+    <script src="~/js/scripts.js"></script>
+</head>
+<body>
+    <header style="text-align: center;">
+        <h1>Test task</h1>
+        <h4>In this web application you can filter and sort workers by name, also you can add new from csv file and delete workers.</h4>
+    </header>
+    <article>
+        <select id="sorting">
+            <option value="Asc" selected>Asc</option>
+            <option value="Desc">Desc</option>
+        </select>
+        <input type="button" onclick="sortNames()" value="Sort by names" />
+        <br />
+        <input type="text" id="nameFilter" onkeyup="filterNames()" placeholder="Search for names.." title="Type in a name" />
+        <table border="1" id="table">
+            <caption>Workers</caption>
+            <tr>
+                <th>Name</th>
+                <th>Date of birthday</th>
+                <th>Married</th>
+                <th>Phone</th>
+                <th>Salary</th>
+                <th>Delete action</th>
+            </tr>
+            @{
+                foreach (Worker worker in Model) {
+                    <tr>
+                        <td>@worker.Name</td>
+                        <td>@worker.DateOfBirth.ToString("dddd, dd MMMM yyyy", System.Globalization.CultureInfo.CreateSpecificCulture("en-US"))</td>
+                        @{
+                            string status;
+                            if (worker.Married) status = "Yes";
+                            else status = "No";
+                        }
+                        <td>@status</td>
+                        <td>@worker.Phone</td>
+                        <td>@worker.Salary</td>
+                        <td>
+                            <form method="post" action="/Workers/Delete">
+                                <input type="hidden" value="@worker.Id" name="id" />
+                                <input type="submit" value="Delete Worker" />
+                            </form>
+                        </td>
+                    </tr>
+                }
+            }
+        </table>
+        <br />
+        <form method="post" action="/workers" enctype="multipart/form-data">
+            <input type="file" value="Choose file..." name="file" />
+            <input type="submit" value="Upload" />
+        </form>
+    </article>
+    <footer>
+
+    </footer>
+</body>
+</html>
